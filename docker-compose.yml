@@ -1,0 +1,32 @@
+version: '3.4'
+
+services:
+  userapi:
+    image: rolobook/highloadarchitect_userapi
+    env_file: "example.env"
+    depends_on:
+        - dbmanager
+        - postgres
+    ports:
+        - "9999:8080"
+    networks:
+      - otus
+
+  dbmanager:
+    image: rolobook/highloadarchitect_dbmanager
+    env_file: "example.env"
+    depends_on:
+        - postgres
+    networks:
+      - otus
+
+  postgres:
+    image: postgres
+    env_file: "example.env"
+    restart: always
+    ports:
+        - "5777:5432"
+    networks:
+      - otus
+networks:
+ otus:

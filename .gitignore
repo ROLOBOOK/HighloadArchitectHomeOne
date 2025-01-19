@@ -333,10 +333,9 @@ LoadOrgData/Dockerfile.env
 
 .env
 secret_configmap.yml
-docker-compose.yml
 postgres/
 TestResults/
 pusher/
-
+app/docker-compose.yml
 */Properties/launchSettings.json
 nuget.config
