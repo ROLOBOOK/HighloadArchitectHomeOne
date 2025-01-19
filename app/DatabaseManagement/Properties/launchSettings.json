@@ -1,0 +1,18 @@
+{
+  "profiles": {
+    "DatabaseManagement": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "dbServer": "localhost",
+        "dbName": "outus_net",
+        "dbUser": "otususer",
+        "dbPassword": "vBKYjKUTPp",
+        "dbPort": "5666",
+        "countFakeData": "500"
+      }
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

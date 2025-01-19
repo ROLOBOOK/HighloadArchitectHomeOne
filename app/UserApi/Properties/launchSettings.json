@@ -1,0 +1,62 @@
+{
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5014"
+    },
+    "https": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DbSettings__Server": "postgres",
+        "DbSettings__Name":"outus_net",
+        "DbSettings__User": "otususer",
+        "DbSettings__Password":"vBKYjKUTPp",
+        "DbSettings__Port": "5432",
+        "DbConnsectingString": "123123",
+        "Salt": "009705841DAE0A49A437C4334AC1E3E7E76383B6CC1C5AF36F2623FDA88E5D7BF9CF401CBFD35E6F08D08C852AB0D32F04B8BC09BBD08C49D9B1263E632CF821",
+        "AuthOptions__ISSUER": "ISSUER",
+        "AuthOptions__AUDIENCE": "AUDIENCE",
+        "AuthOptions__Key": "009705841DAE0A49A437C4334AC1E3E7E76383B6CC1C5AF3"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7147;http://localhost:5014"
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
+      "environmentVariables": {
+        "ASPNETCORE_HTTPS_PORTS": "8081",
+        "ASPNETCORE_HTTP_PORTS": "8080"
+      },
+      "publishAllPorts": true,
+      "useSSL": true
+    }
+  },
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:64015",
+      "sslPort": 44308
+    }
+  }
+}
