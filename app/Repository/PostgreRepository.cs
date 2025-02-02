@@ -14,6 +14,7 @@ public class PostgreRepository : IRepository
     {
         _settings = settings;
     }
+
     public async Task<Guid> CreateAsync(NewUserDto user)
     {
         var id = Guid.NewGuid();
@@ -64,7 +65,7 @@ public class PostgreRepository : IRepository
 
     public async Task<UserDto?> GetAsync(Guid id)
     {
-       string queue = "Select \"Id\",\"FirstName\",\"LastName\",\"BirthDay\",\"Sex\",\"Interests\",\"City\" from \"User\" where \"Id\"=@id";
+        string queue = "Select \"Id\",\"FirstName\",\"LastName\",\"BirthDay\",\"Sex\",\"Interests\",\"City\" from \"User\" where \"Id\"=@id";
 
         using var con = new NpgsqlConnection(_settings.Value.DbSettings.ToString());
         await con.OpenAsync();
@@ -87,5 +88,39 @@ public class PostgreRepository : IRepository
             Interests=reader.GetString(5),
             City=reader.GetString(6),
         };
+    }
+
+    public async Task<List<UserDto>?> SearchUsersAsync(string firstName, string lastName)
+    {
+        string queue = """
+            Select "Id","FirstName","LastName","BirthDay","Sex","Interests","City" from "User"
+            where "FirstName" like @firstName and "LastName" like @lastName
+            order by "Id"
+            """;
+
+        using var con = new NpgsqlConnection(_settings.Value.DbSettings.ToString());
+        await con.OpenAsync();
+        using DbCommand com = new NpgsqlCommand(queue, con);
+        com.Parameters.Add(new NpgsqlParameter("@firstName", firstName + "%"));
+        com.Parameters.Add(new NpgsqlParameter("@lastName", lastName + "%"));
+
+        var reader = await com.ExecuteReaderAsync();
+        var list = new List<UserDto>();
+        while(await reader.ReadAsync())
+        {
+            list.Add(
+                new UserDto
+                {
+                    Id = reader.GetGuid(0),
+                    FirstName = reader.GetString(1),
+                    LastName = reader.GetString(2),
+                    BirthDay = reader.GetDateTime(3),
+                    Sex = (Sex)reader.GetInt32(4),
+                    Interests = reader.GetString(5),
+                    City = reader.GetString(6),
+                }
+                );
+        }
+        return list;
     }
 }

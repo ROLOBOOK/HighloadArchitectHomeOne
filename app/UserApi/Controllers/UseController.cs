@@ -58,4 +58,23 @@ public class UseController : Controller
             return BadRequest(ex.Message);
         }
     }
+    
+    [Authorize]
+    [HttpGet("user/search/")]
+    public async Task<IActionResult> Search(string firstName, string lastName)
+    {
+        try
+        {
+            List<UserDto>? users = await _userService.SearchUsersAsync(firstName, lastName);
+            if (users != null)
+            {
+                return Ok(users);
+            }
+            return NotFound();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }

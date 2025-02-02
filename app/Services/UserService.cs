@@ -38,4 +38,14 @@ public class UserService: IUserService
         }
         return await _repository.GetAsync(id);
     }
+
+    public async Task<List<UserDto>?> SearchUsersAsync(string firstName, string lastName)
+    {
+        if(string.IsNullOrWhiteSpace(firstName) && string.IsNullOrWhiteSpace(lastName))
+        {
+            return null;
+        }
+
+        return await _repository.SearchUsersAsync(firstName, lastName);
+    }
 }

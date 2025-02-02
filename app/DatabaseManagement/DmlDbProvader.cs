@@ -16,7 +16,7 @@ internal static class DmlDbProvader
     private const string _insert = """ INSERT INTO public."User" ("Login","Password","FirstName","LastName","BirthDay","Sex","Interests","City") VALUES """;
     private const string _values = "(@login{0},@password{0},@firsName{0},@lastName{0},@birthDay{0},@sex{0},@interests{0},@city{0}),";
 
-    public static async Task SetFakeData(DbSettings bdSettings, int countFakeData)
+    public static async Task SetFakeData(DbSettings bdSettings, long countFakeData)
     {
         try
         {
@@ -25,14 +25,21 @@ internal static class DmlDbProvader
             using DbCommand com = new NpgsqlCommand();
             com.Connection = con;
 
+
+            var count = await GetCountUsersAsync(com);
+            if(count <= countFakeData)
+            {
+                countFakeData -= count;
+            }
+
             Faker<User> testUsers = GenerateFakeUser();
             StringBuilder sb = new StringBuilder();
             if(countFakeData != 0)
             {
-                int oneStep = countFakeData > 100 ? 100 : countFakeData;
-                int steps = countFakeData > oneStep ? countFakeData : 1;
+                long oneStep = countFakeData > 100 ? 100 : countFakeData;
+                long steps = countFakeData > oneStep ? countFakeData : 1;
 
-                for (int i = 0; i < steps; i += oneStep)
+                for (long i = 0; i < steps; i += oneStep)
                 {
                     SetFakeUser(com, testUsers, sb, oneStep);
                     await com.ExecuteNonQueryAsync();
@@ -48,7 +55,21 @@ internal static class DmlDbProvader
 
     }
 
-    private static void SetFakeUser(DbCommand com, Faker<User> testUsers, StringBuilder sb, int oneStep)
+    private static async Task<long> GetCountUsersAsync(DbCommand com) 
+    {
+        com.CommandText = """
+            select count(1) from "User"
+            """;
+
+        var usersCount = await com.ExecuteScalarAsync();
+        if (usersCount is long count)
+        {
+            return count;
+        }
+        return 0;
+    }
+
+    private static void SetFakeUser(DbCommand com, Faker<User> testUsers, StringBuilder sb, long oneStep)
     {
         sb.Clear();
         com.Parameters.Clear();
