@@ -77,4 +77,4 @@ Sort  (cost=10137.15..10146.09 rows=3577 width=57)
 |user/search_index_100 |100      |43     |40    |48      |55      |97      |38 |125|23.03617  |13063.80       |3.44       |
 |user/search_index_1000|1000     |43     |40    |45      |60      |86      |38 |317|22.74692  |12899.77       |3.40       |
 
-!["Средния скорость ответа api"]( )
+!["Средния скорость ответа api"](https://github.com/ROLOBOOK/HighloadArchitectHomeOne/blob/main/Test_apiresult_graf.png?raw=true)
