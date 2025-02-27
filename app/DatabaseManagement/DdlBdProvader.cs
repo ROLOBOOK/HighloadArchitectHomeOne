@@ -25,7 +25,7 @@ internal static class DdlBdProvader
                 await CreateDbAsync(com, bdSettings);
                 await Console.Out.WriteLineAsync($"Create bd {bdSettings.BdName}");
             }
-            await CreateTableAsync(bdSettings);
+            await CreateTablesAsync(bdSettings);
 
         }
         catch
@@ -58,18 +58,11 @@ internal static class DdlBdProvader
         await com.ExecuteScalarAsync();
     }
 
-    private static async Task CreateTableAsync(DbSettings bdSettings)
+    private static async Task CreateTablesAsync(DbSettings bdSettings)
     {
-        using var con = new NpgsqlConnection(bdSettings.ToString());
-        await con.OpenAsync();
-        using DbCommand com = new NpgsqlCommand();
-        com.Connection = con;
-
-        com.CommandText = "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"";
-        await com.ExecuteScalarAsync();
-
-
-        com.CommandText = """
+        var dic = new Dictionary<string, string>
+        {
+            ["User"] = """
             CREATE table IF NOT EXISTS  public."User" (
             	"Id" uuid DEFAULT uuid_generate_v4() NOT NULL,
                 "Login" varchar(250) DEFAULT ''::character varying NOT NULL,
@@ -84,9 +77,44 @@ internal static class DdlBdProvader
             	CONSTRAINT "PK4Ko3lzDeEQLWtgJH5fdZO3BQIxc" PRIMARY KEY ("Id"),
                 CONSTRAINT adminunit_unique UNIQUE ("Login")
             );
-            """;
-        await com.ExecuteScalarAsync();
+            """,
+            ["Friend"] = """
+            CREATE TABLE IF NOT EXISTS public."Friend" (
+            	"Id" uuid DEFAULT uuid_generate_v4() NOT NULL,
+            	"UserId" uuid NOT NULL,
+            	"FriendId" uuid NOT NULL,
+            	CONSTRAINT "PK4Ko3lzDeEQLWtgJH5fdZO3BQIxx" PRIMARY KEY ("Id"),
+            	CONSTRAINT friend_unique UNIQUE ("UserId", "FriendId"),
+            	CONSTRAINT "FK4vuAoQFpJNm3KVrfzlDHOztOhk" FOREIGN KEY ("UserId") REFERENCES public."User"("Id"),
+            	CONSTRAINT "FK7FiIMVIMNS5l5GKCLP3pqpjE8yY" FOREIGN KEY ("FriendId") REFERENCES public."User"("Id")
+            );
+            """,
+            ["Post"] = """
+            CREATE table IF NOT EXISTS public."Post" (
+                "Id" uuid DEFAULT uuid_generate_v4() NOT NULL,
+                "CreatedOn" timestamp DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP) NULL,
+                "ModifiedOn" timestamp DEFAULT timezone('utc'::text, CURRENT_TIMESTAMP) NULL,
+                "UserId" uuid NOT NULL,
+                "Text" text DEFAULT ''::text NOT NULL,
+                CONSTRAINT "PK4Ko3lzDeEQLWtgJH6fdZO3BQIxx" PRIMARY KEY ("Id"),
+                CONSTRAINT "FK5vuAoQFpJNm3KVrfzlDHOztOhk" FOREIGN KEY ("UserId") REFERENCES public."User"("Id")
+            );
+            """,
+        };
 
-        await Console.Out.WriteLineAsync($"Create table User");
+        using var con = new NpgsqlConnection(bdSettings.ToString());
+        await con.OpenAsync();
+        using DbCommand com = new NpgsqlCommand();
+        com.Connection = con;
+
+        com.CommandText = "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"";
+        await com.ExecuteScalarAsync();
+        await Console.Out.WriteLineAsync("Will create tables: " + string.Join(",", dic.Keys));
+        foreach (var item in dic)
+        {
+            com.CommandText = item.Value;
+            await com.ExecuteScalarAsync();
+            await Console.Out.WriteLineAsync($"Create table {item.Key}");
+        }
     }
 }

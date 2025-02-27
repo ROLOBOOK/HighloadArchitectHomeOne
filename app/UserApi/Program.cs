@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Models;
 using Repository;
 using Services;
+using Services.Interfaces;
 using System.Text;
 
 namespace UserApi;
@@ -15,15 +16,24 @@ public static class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddScoped< IUserService, UserService>();
+        builder.Services.AddScoped<IFriendService, FriendService>();
         builder.Services.AddScoped<IRepository, PostgreRepository>();
+        builder.Services.AddScoped<IPostService, PostService>();
         builder.Services.AddScoped<ISecuriteService, SecuriteService>();
-        
+
+        builder.Services.AddHttpContextAccessor();
+
         builder.Services
                 .AddOptions<Settings>()
                 .Bind(builder.Configuration)
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
 
+        builder.Services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = builder.Configuration[nameof(Settings.RedisConnectionString)];
+            options.InstanceName = "SampleInstance:";
+        });
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

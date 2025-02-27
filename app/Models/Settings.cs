@@ -4,6 +4,7 @@ public class Settings
 {
     public DbSettings DbSettings { get; set; } = null!;
     public string Salt { get; set; } = null!;
+    public string RedisConnectionString { get; set; } = null!;
     public AuthOptions AuthOptions { get; set; } = null!;
 
 }

@@ -339,3 +339,4 @@ pusher/
 app/docker-compose.yml
 */Properties/launchSettings.json
 nuget.config
+app/data/

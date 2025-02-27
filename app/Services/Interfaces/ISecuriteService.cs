@@ -1,7 +1,7 @@
 ﻿
 using System.Security.Claims;
 
-namespace Services;
+namespace Services.Interfaces;
 
 public interface ISecuriteService
 {
