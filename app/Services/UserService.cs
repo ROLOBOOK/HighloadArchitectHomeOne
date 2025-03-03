@@ -1,4 +1,5 @@
 ﻿using Models;
+using Services.Interfaces;
 using System.Security.Claims;
 
 namespace Services;
@@ -17,7 +18,7 @@ public class UserService: IUserService
     public async Task<Response?> CreateAsync(NewUserDto user)
     {
         user.Password = _passwordService.HashPasword(user.Password);
-        var id = await _repository.CreateAsync(user);
+        var id = await _repository.CreateUserAsync(user);
         if (id != Guid.Empty)
         {
             return new Response
@@ -36,7 +37,7 @@ public class UserService: IUserService
         {
             return null;
         }
-        return await _repository.GetAsync(id);
+        return await _repository.GetUserAsync(id);
     }
 
     public async Task<List<UserDto>?> SearchUsersAsync(string firstName, string lastName)

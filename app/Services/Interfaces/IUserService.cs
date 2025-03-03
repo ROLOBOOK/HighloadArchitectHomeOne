@@ -1,6 +1,6 @@
 ﻿using Models;
 
-namespace Services;
+namespace Services.Interfaces;
 
 public interface IUserService
 {

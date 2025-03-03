@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Models;
-using Services;
+using Services.Interfaces;
 using System.Security.Claims;
 
 namespace UserApi.Controllers;
@@ -25,8 +25,8 @@ public class LoginController : Controller
     public async Task<IActionResult> LoginAsync(string login, string password)
     {
         var user = await _repository.GetAdminUnitAsync(login);
-        
-        if(user is not null && _passwordService.VerifyPassword(password, user.Password))
+
+        if (user is not null && _passwordService.VerifyPassword(password, user.Password))
         {
             return Ok(new Response
             {

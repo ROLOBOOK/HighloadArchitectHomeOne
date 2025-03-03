@@ -2,24 +2,31 @@ version: '3.4'
 
 services:
   userapi:
-    image: rolobook/highloadarchitect_userapi
+    image: rolobook/highloadarchitect_userapi:0.2
     env_file: "example.env"
     depends_on:
         - dbmanager
         - postgres
+        - redis
     ports:
         - "9999:8080"
     networks:
       - otus
 
   dbmanager:
-    image: rolobook/highloadarchitect_dbmanager
+    image: rolobook/highloadarchitect_dbmanager:0.2
     env_file: "example.env"
     depends_on:
         - postgres
     networks:
       - otus
-
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    networks:
+      - otus
   postgres:
     image: postgres
     env_file: "example.env"
@@ -28,5 +35,7 @@ services:
         - "5777:5432"
     networks:
       - otus
+
+
 networks:
  otus:

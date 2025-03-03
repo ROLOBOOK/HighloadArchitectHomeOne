@@ -8,50 +8,374 @@
 	},
 	"item": [
 		{
-			"name": "user/get",
-			"event": [
+			"name": "Posts",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZXhhbXBsZSIsImV4cCI6MTczNzI4MDYwMiwiaXNzIjoiSVNTVUVSIiwiYXVkIjoiQVVESUVOQ0UifQ.NkqyGK3Xq9eQZ2IRI2qjiClE_PSAxiRNgH27igvFPi8",
-							"type": "string"
+					"name": "ADD",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZXhhbXBsZSIsImV4cCI6MTc0MDY4MTcxMywiaXNzIjoiSVNTVUVSIiwiYXVkIjoiQVVESUVOQ0UifQ.y-2kLdxI-wbL_ph_KiJ3oJhyCmSRamI-4CLRUmx4XfU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"Text\":\"123123123312\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9999/post/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9999",
+							"path": [
+								"post",
+								"create"
+							]
 						}
-					]
+					},
+					"response": []
 				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8999/user/get/e96afde8-5223-482a-8fa7-734266f3c992",
-					"protocol": "http",
-					"host": [
-						"localhost"
+				{
+					"name": "update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZXhhbXBsZSIsImV4cCI6MTc0MDY4MTcxMywiaXNzIjoiSVNTVUVSIiwiYXVkIjoiQVVESUVOQ0UifQ.y-2kLdxI-wbL_ph_KiJ3oJhyCmSRamI-4CLRUmx4XfU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"Id\":\"a3bfc981-b8e5-4c88-8143-853cd83ea065\",\r\n\"Text\":\"123123123!!!!!!!!!312\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9999/post/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9999",
+							"path": [
+								"post",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DEL",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZXhhbXBsZSIsImV4cCI6MTc0MDY4MTcxMywiaXNzIjoiSVNTVUVSIiwiYXVkIjoiQVVESUVOQ0UifQ.y-2kLdxI-wbL_ph_KiJ3oJhyCmSRamI-4CLRUmx4XfU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9999/post/delete/a3bfc981-b8e5-4c88-8143-853cd83ea065",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9999",
+							"path": [
+								"post",
+								"delete",
+								"a3bfc981-b8e5-4c88-8143-853cd83ea065"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZXhhbXBsZSIsImV4cCI6MTc0MDUxMDA4OCwiaXNzIjoiSVNTVUVSIiwiYXVkIjoiQVVESUVOQ0UifQ.t7Vj51x7ccqrqM4nqfmzzVw_y1QZ9DlkVqhvp-SU1M8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"text\":\"sdasdasd\"}"
+						},
+						"url": {
+							"raw": "http://localhost:9999/post/get/a2757fd3-a0b2-4112-a6d3-400733e61aef",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9999",
+							"path": [
+								"post",
+								"get",
+								"a2757fd3-a0b2-4112-a6d3-400733e61aef"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Feed",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZXhhbXBsZSIsImV4cCI6MTc0MDY4MTcxMywiaXNzIjoiSVNTVUVSIiwiYXVkIjoiQVVESUVOQ0UifQ.y-2kLdxI-wbL_ph_KiJ3oJhyCmSRamI-4CLRUmx4XfU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9999/post/Feed/?offset=3&limit=2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9999",
+							"path": [
+								"post",
+								"Feed",
+								""
+							],
+							"query": [
+								{
+									"key": "offset",
+									"value": "3"
+								},
+								{
+									"key": "limit",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "user/get",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
 					],
-					"port": "8999",
-					"path": [
-						"user",
-						"get",
-						"e96afde8-5223-482a-8fa7-734266f3c992"
-					]
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZXhhbXBsZSIsImV4cCI6MTczNzI4MDYwMiwiaXNzIjoiSVNTVUVSIiwiYXVkIjoiQVVESUVOQ0UifQ.NkqyGK3Xq9eQZ2IRI2qjiClE_PSAxiRNgH27igvFPi8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8999/user/get/e96afde8-5223-482a-8fa7-734266f3c992",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8999",
+							"path": [
+								"user",
+								"get",
+								"e96afde8-5223-482a-8fa7-734266f3c992"
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
 				},
-				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
-			},
-			"response": []
+				{
+					"name": "user/register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"login\": \"string1\",\r\n  \"password\": \"string1\",\r\n  \"firstName\": \"string1\",\r\n  \"lastName\": \"string1\",\r\n  \"birthDay\": \"2025-01-19T08:58:19.026Z\",\r\n  \"sex\": 0,\r\n  \"interests\": \"string1\",\r\n  \"city\": \"string1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8999/user/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8999",
+							"path": [
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Friend",
+			"item": [
+				{
+					"name": "ADD",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZXhhbXBsZSIsImV4cCI6MTc0MDY4MjM5NCwiaXNzIjoiSVNTVUVSIiwiYXVkIjoiQVVESUVOQ0UifQ.7u6xeIk_OX9yBLvTWV9VMhISnps_IjPD4DuYLqqhlSg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9999/friend/add/79b8e6b7-a2da-424a-bef6-4ab2261570ff",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9999",
+							"path": [
+								"friend",
+								"add",
+								"79b8e6b7-a2da-424a-bef6-4ab2261570ff"
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "DEL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZXhhbXBsZSIsImV4cCI6MTc0MDY4MjM5NCwiaXNzIjoiSVNTVUVSIiwiYXVkIjoiQVVESUVOQ0UifQ.7u6xeIk_OX9yBLvTWV9VMhISnps_IjPD4DuYLqqhlSg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9999/friend/delete/79b8e6b7-a2da-424a-bef6-4ab2261570ff",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9999",
+							"path": [
+								"friend",
+								"delete",
+								"79b8e6b7-a2da-424a-bef6-4ab2261570ff"
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "login",
@@ -82,35 +406,6 @@
 					"port": "9999",
 					"path": [
 						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "user/register",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"login\": \"string1\",\r\n  \"password\": \"string1\",\r\n  \"firstName\": \"string1\",\r\n  \"lastName\": \"string1\",\r\n  \"birthDay\": \"2025-01-19T08:58:19.026Z\",\r\n  \"sex\": 0,\r\n  \"interests\": \"string1\",\r\n  \"city\": \"string1\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8999/user/register",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8999",
-					"path": [
-						"user",
-						"register"
 					]
 				}
 			},

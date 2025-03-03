@@ -1,22 +1,17 @@
 ﻿using Bogus;
 using Models;
 using Npgsql;
-using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Runtime;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace DatabaseManagement;
 
 internal static class DmlDbProvader
 {
-    private const string _insert = """ INSERT INTO public."User" ("Login","Password","FirstName","LastName","BirthDay","Sex","Interests","City") VALUES """;
-    private const string _values = "(@login{0},@password{0},@firsName{0},@lastName{0},@birthDay{0},@sex{0},@interests{0},@city{0}),";
+    private const string _insertUser = """ INSERT INTO public."User" ("Login","Password","FirstName","LastName","BirthDay","Sex","Interests","City") VALUES """;
+    private const string _valuesInserUserFormat = "(@login{0},@password{0},@firsName{0},@lastName{0},@birthDay{0},@sex{0},@interests{0},@city{0}),";
 
-    public static async Task SetFakeData(DbSettings bdSettings, long countFakeData)
+    public static async Task SetFakeData(DbSettings bdSettings, long countFakeUser, long countFakePost)
     {
         try
         {
@@ -26,39 +21,19 @@ internal static class DmlDbProvader
             com.Connection = con;
 
 
-            var count = await GetCountUsersAsync(com);
-            if(count <= countFakeData)
-            {
-                countFakeData -= count;
-            }
-
-            Faker<User> testUsers = GenerateFakeUser();
-            StringBuilder sb = new StringBuilder();
-            if(countFakeData != 0)
-            {
-                long oneStep = countFakeData > 100 ? 100 : countFakeData;
-                long steps = countFakeData > oneStep ? countFakeData : 1;
-
-                for (long i = 0; i < steps; i += oneStep)
-                {
-                    SetFakeUser(com, testUsers, sb, oneStep);
-                    await com.ExecuteNonQueryAsync();
-                }
-                Console.WriteLine($"Set test {countFakeData} row");
-            }
-            await SetOneExampleUserAsync(com, testUsers);
+            await SetFakeUsers(countFakeUser, com);
+            await SetFakePots(countFakePost, com);
         }
         catch (Exception ex)
         {
             await Console.Out.WriteLineAsync(ex.Message);
         }
-
     }
 
-    private static async Task<long> GetCountUsersAsync(DbCommand com) 
+    private static async Task<long> GetCountUsersAsync(DbCommand com, string table)
     {
-        com.CommandText = """
-            select count(1) from "User"
+        com.CommandText = $"""
+            select count(1) from "{table}"
             """;
 
         var usersCount = await com.ExecuteScalarAsync();
@@ -69,16 +44,46 @@ internal static class DmlDbProvader
         return 0;
     }
 
-    private static void SetFakeUser(DbCommand com, Faker<User> testUsers, StringBuilder sb, long oneStep)
+    private static async Task SetFakeUsers(long countFakeData, DbCommand com)
+    {
+        var count = await GetCountUsersAsync(com, "User");
+
+        if (count <= countFakeData)
+        {
+            countFakeData -= count;
+        }
+        else
+        {
+            countFakeData = 0;
+        }
+
+        Faker<User> testUsers = GenerateFakeUser();
+        StringBuilder sb = new StringBuilder();
+        if (countFakeData != 0)
+        {
+            long oneStep = countFakeData > 100 ? 100 : countFakeData;
+            long steps = countFakeData > oneStep ? countFakeData : 1;
+
+            for (long i = 0; i < steps; i += oneStep)
+            {
+                SetFakeOneUser(com, testUsers, sb, oneStep);
+                await com.ExecuteNonQueryAsync();
+            }
+            Console.WriteLine($"Set test users {countFakeData} row");
+        }
+        await SetOneExampleUserAsync(com, testUsers);
+    }
+
+    private static void SetFakeOneUser(DbCommand com, Faker<User> testUsers, StringBuilder sb, long oneStep)
     {
         sb.Clear();
         com.Parameters.Clear();
 
-        sb.AppendLine(_insert);
+        sb.AppendLine(_insertUser);
         for (int step = 0; step < oneStep; step++)
         {
             var user = testUsers.Generate();
-            sb.Append(string.Format(_values, step));
+            sb.Append(string.Format(_valuesInserUserFormat, step));
             com.Parameters.AddRange(new NpgsqlParameter[]
             {
                 new NpgsqlParameter($"@login{step}", user.Login),
@@ -95,7 +100,20 @@ internal static class DmlDbProvader
         sb.Append(" on conflict (\"Login\") do nothing");
         com.CommandText = sb.ToString();
     }
-    
+
+    private static Faker<User> GenerateFakeUser()
+    {
+        return new Faker<User>()
+                        .RuleFor(u => u.Login, f => f.Person.UserName)
+                        .RuleFor(u => u.Password, f => f.Random.AlphaNumeric(15))
+                        .RuleFor(u => u.FirstName, f => f.Name.FirstName())
+                        .RuleFor(u => u.LastName, f => f.Name.LastName())
+                        .RuleFor(u => u.BirthDay, f => f.Date.Past(15))
+                        .RuleFor(u => u.Sex, f => f.Random.Enum<Sex>())
+                        .RuleFor(u => u.City, f => f.Address.City())
+                        .RuleFor(u => u.Interests, f => f.Lorem.Letter(2));
+    }
+
     /// <summary>
     /// Тестовый юзер example/Qwerty123
     /// </summary>
@@ -128,17 +146,50 @@ internal static class DmlDbProvader
         await com.ExecuteNonQueryAsync();
     }
 
-    private static Faker<User> GenerateFakeUser()
+    public static async Task SetFakePots(long countFakeData, DbCommand com)
     {
-        return new Faker<User>()
-                        .RuleFor(u => u.Login, f => f.Person.UserName)
-                        .RuleFor(u => u.Password, f => f.Random.AlphaNumeric(15))
-                        .RuleFor(u => u.FirstName, f => f.Name.FirstName())
-                        .RuleFor(u => u.LastName, f => f.Name.LastName())
-                        .RuleFor(u => u.BirthDay, f => f.Date.Past(15))
-                        .RuleFor(u => u.Sex, f => f.Random.Enum<Sex>())
-                        .RuleFor(u => u.City, f => f.Address.City())
-                        .RuleFor(u => u.Interests, f => f.Lorem.Letter(2));
-    }
+        var count = await GetCountUsersAsync(com, "Post");
 
+        if (count <= countFakeData)
+        {
+            countFakeData -= count;
+        }
+        else
+        {
+            countFakeData = 0;
+        }
+
+        var faker = new Faker("en");
+        com.CommandText = """
+            select "Id" from "User" limit 3000
+            """;
+        var ids = new List<Guid>();
+        var reader = await com.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            ids.Add(reader.GetGuid(0));
+        }
+        await reader.CloseAsync();
+
+        com.CommandText = """
+            INSERT INTO public."Post"
+            ("UserId", "Text")
+            VALUES(@id, @text)
+            """;
+
+        for (int i = 0; i < countFakeData; i++)
+        {
+            com.Parameters.Clear();
+            
+            com.Parameters.AddRange(new NpgsqlParameter[]
+           {
+                new NpgsqlParameter("@id", ids[faker.Random.Number(ids.Count-1)]),
+                new NpgsqlParameter("@text", faker.Lorem.Paragraph()),
+            });
+
+            await com.ExecuteNonQueryAsync();
+        }
+
+        Console.WriteLine($"Set test posts {countFakeData} row");
+    }
 }

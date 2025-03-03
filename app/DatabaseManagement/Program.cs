@@ -7,7 +7,7 @@ internal static class Program
 {
     static async Task Main(string[] args)
     {
-        await Task.Delay(TimeSpan.FromSeconds(5)); 
+        await Task.Delay(TimeSpan.FromSeconds(10)); 
         
         var settings = new DbSettings
         {
@@ -22,8 +22,9 @@ internal static class Program
         {
             await DdlBdProvader.CreateIfNotExistsAsync(settings);
 
-            int.TryParse(Environment.GetEnvironmentVariable("countFakeData"), out int count);
-            await DmlDbProvader.SetFakeData(settings, count);
+            long.TryParse(Environment.GetEnvironmentVariable("countFakeUser"), out long countUser);
+            long.TryParse(Environment.GetEnvironmentVariable("countFakePost"), out long countPost);
+            await DmlDbProvader.SetFakeData(settings, countUser, countPost);
         }
         catch (Exception ex)
         {
